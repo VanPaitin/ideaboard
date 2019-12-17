@@ -20,7 +20,7 @@ export default class IdeasContainer extends Component {
   }
 
   componentDidMount() {
-    axios.get(`${process.env.REACT_APP_API_DOMAIN}/api/ideas`)
+    axios.get(`${window.API_DOMAIN}/api/ideas`)
       .then(response => this.setState({ ideas: response.data }))
       .catch(error => console.error(error));
   }
@@ -30,7 +30,7 @@ export default class IdeasContainer extends Component {
   closeIdeaForm = () => this.setState({ showModal: false, errors: null });
 
   createIdea = (data) => {
-    axios.post(`${process.env.REACT_APP_API_DOMAIN}/api/ideas`, { idea: data })
+    axios.post(`${window.API_DOMAIN}/api/ideas`, { idea: data })
       .then(({ data }) => {
         document.querySelector('.modal-header button.close').click();
         this.setState({
@@ -49,7 +49,7 @@ export default class IdeasContainer extends Component {
   };
 
   updateIdea = ({ id, ...data }, eb) => {
-    axios.put(`${process.env.REACT_APP_API_DOMAIN}/api/ideas/${id}`, { idea: data })
+    axios.put(`${window.API_DOMAIN}/api/ideas/${id}`, { idea: data })
       .then(() => {
         this.setState({  notification: 'All changes saved', transitionIn: true });
         let timeout = setTimeout(() => {
@@ -70,18 +70,18 @@ export default class IdeasContainer extends Component {
       });
   };
 
+  deleteIdea = (id) => {
+    axios.delete(`${window.API_DOMAIN}/api/ideas/${id}`)
+      .then(() => {
+        this.setState({ ideas: this.state.ideas.filter(idea => idea.id !== id)});
+      });
+  };
+
   cancelModal = () => document.querySelector('.modal-header button.close').click();
 
   transferClick = e => {
     e.preventDefault();
     document.querySelector('button.dummy-button').click();
-  };
-
-  deleteIdea = (id) => {
-    axios.delete(`${process.env.REACT_APP_API_DOMAIN}/api/ideas/${id}`)
-      .then(() => {
-        this.setState({ ideas: this.state.ideas.filter(idea => idea.id !== id)});
-      });
   };
 
   render() {
